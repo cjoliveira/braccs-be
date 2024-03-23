@@ -3,6 +3,8 @@ package braccs.gadocontrol.service.impl;
 import braccs.gadocontrol.keys.VendaKey;
 import braccs.gadocontrol.model.entity.Venda;
 import braccs.gadocontrol.model.repository.VendaRepository;
+import braccs.gadocontrol.model.strategy.PrecoAltaQtdStrategy;
+import braccs.gadocontrol.model.strategy.PrecoRegularStrategy;
 import braccs.gadocontrol.service.VendaService;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Example;

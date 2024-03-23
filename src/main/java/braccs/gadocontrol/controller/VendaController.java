@@ -2,6 +2,8 @@ package braccs.gadocontrol.controller;
 
 import braccs.gadocontrol.dto.VendaDTO;
 import braccs.gadocontrol.model.entity.Venda;
+import braccs.gadocontrol.model.strategy.PrecoAltaQtdStrategy;
+import braccs.gadocontrol.model.strategy.PrecoRegularStrategy;
 import braccs.gadocontrol.service.AnimalService;
 import braccs.gadocontrol.service.ClienteService;
 import braccs.gadocontrol.service.UsuarioService;
@@ -107,5 +109,26 @@ public class VendaController {
         vendaFiltro.setNumVenda(numVenda);
         List<Venda> venda = this.service.buscar(vendaFiltro);
         return ResponseEntity.ok(venda);
+    }
+
+    @GetMapping({"/simular"})
+    public ResponseEntity simularPreco(@RequestBody VendaDTO dto) {
+        if (this.service.consultarPorId(dto.getIdAnimal(), dto.getIdUsuario(), dto.getIdCliente()).isPresent()) {
+            return ResponseEntity.badRequest().body("ID da venda já existe na BD");
+        } else if (this.serviceAnimal.consultarPorId(dto.getIdAnimal()).isEmpty()) {
+            return ResponseEntity.badRequest().body("ID do animal não existe na BD");
+        } else if (this.serviceCliente.consultarPorId(dto.getIdCliente()).isEmpty()) {
+            return ResponseEntity.badRequest().body("ID do cliente não existe na BD");
+        } else if (this.serviceUsuario.consultarPorId(dto.getIdUsuario()).isEmpty()) {
+            return ResponseEntity.badRequest().body("ID do usuario não existe na BD");
+        } else {
+            Venda venda = this.converter(dto);
+            if(venda.getCliente().getCpfCnpj().length()<=11){
+                venda.definirPreco(new PrecoRegularStrategy());
+            } else {
+                venda.definirPreco(new PrecoAltaQtdStrategy());
+            }
+            return ResponseEntity.ok(venda);
+        }
     }
 }
