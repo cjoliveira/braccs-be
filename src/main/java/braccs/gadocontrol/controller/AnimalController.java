@@ -28,6 +28,7 @@ public class AnimalController {
         animal.setNumId(dto.getNumId());
         animal.setTipo(dto.getTipo());
         animal.setDataNasc(dto.getDataNasc());
+        animal.setDimensao(dto.getDimensao());
         animal.setPeso(dto.getPeso());
         animal.setStatusAtual(dto.getStatusAtual());
         animal.setPreco(dto.getPreco());
@@ -98,6 +99,7 @@ public class AnimalController {
             @RequestParam(value = "numId", required = false) String numId,
             @RequestParam(value = "tipo", required = false) String tipo,
             @RequestParam(value = "dataNasc", required = false) Date dataNasc,
+            @RequestParam(value = "dimensao", required = false) String dimensao,
             @RequestParam(value = "peso", required = false) Long peso,
             @RequestParam(value = "statusAtual", required = false) String statusAtual,
             @RequestParam(value = "preco", required = false) Long preco,
@@ -109,6 +111,7 @@ public class AnimalController {
         animalFiltro.setNumId(numId);
         animalFiltro.setTipo(tipo);
         animalFiltro.setDataNasc(dataNasc);
+        animalFiltro.setDimensao(dimensao);
         animalFiltro.setPeso(peso);
         animalFiltro.setStatusAtual(statusAtual);
         animalFiltro.setPreco(preco);

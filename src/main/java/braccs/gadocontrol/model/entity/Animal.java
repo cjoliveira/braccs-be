@@ -13,68 +13,46 @@ import java.util.Date;
 public class Animal {
 
     @Id
-    @Column(
-            name = "IDANIMAL"
-    )
-    @GeneratedValue(
-            strategy = GenerationType.IDENTITY
-    )
+    @Column(name = "IDANIMAL")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idAnimal;
+
     @ManyToOne
-    @JoinColumn(
-            name = "IDMAE",
-            nullable = true
-    )
+    @JoinColumn(name = "IDMAE", nullable = true)
     private Animal mae;
+
     @ManyToOne
-    @JoinColumn(
-            name = "IDUSUARIO"
-    )
+    @JoinColumn(name = "IDUSUARIO")
     private Usuario usuarioCadastro;
-    @Column(
-            name = "NUMID",
-            nullable = false
-    )
+
+    @Column(name = "NUMID", nullable = false)
     private String numId;
-    @Column(
-            name = "TIPO",
-            nullable = false
-    )
+
+    @Column(name = "TIPO", nullable = false)
     private String tipo;
-    @Column(
-            name = "DATANASC",
-            nullable = false
-    )
+
+    @Column(name = "DATANASC", nullable = false)
     private Date dataNasc;
-    @Column(
-            name = "PESO",
-            nullable = false
-    )
+
+    @Column(name = "DIM", nullable = false)
+    private String dimensao;
+
+    @Column(name = "PESO", nullable = false)
     private Long peso;
-    @Column(
-            name = "STATUSATUAL",
-            nullable = false
-    )
+
+    @Column(name = "STATUSATUAL", nullable = false)
     private String statusAtual;
-    @Column(
-            name = "PRECO",
-            nullable = false
-    )
+
+    @Column(name = "PRECO", nullable = false)
     private Long preco;
-    @Column(
-            name = "DATACADASTRO",
-            nullable = false
-    )
+
+    @Column(name = "DATACADASTRO", nullable = false)
     private Date dataCadastro;
-    @Column(
-            name = "GENERO",
-            nullable = false
-    )
+
+    @Column(name = "GENERO", nullable = false)
     private String genero;
-    @Column(
-            name = "NUMCOMPRA",
-            nullable = false
-    )
+
+    @Column(name = "NUMCOMPRA", nullable = false)
     private Long numCompra;
 
     public Animal() {
@@ -126,6 +104,14 @@ public class Animal {
 
     public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
+    }
+
+    public String getDimensao() {
+        return dimensao;
+    }
+
+    public void setDimensao(String dimensao) {
+        this.dimensao = dimensao;
     }
 
     public Long getPeso() {

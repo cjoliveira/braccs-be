@@ -7,9 +7,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Example;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AnimalServiceImpl implements AnimalService {
@@ -43,7 +41,9 @@ public class AnimalServiceImpl implements AnimalService {
     @Transactional
     public List<Animal> buscar(Animal animal) {
         Example<Animal> example = Example.of(animal);
-        return this.repository.findAll(example);
+        List<Animal> animais = this.repository.findAll(example);
+        animais.sort(Comparator.comparing(Animal::getDataCadastro).reversed());
+        return animais;
     }
 
     @Override
