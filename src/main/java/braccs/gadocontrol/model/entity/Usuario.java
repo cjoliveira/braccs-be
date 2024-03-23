@@ -1,5 +1,6 @@
 package braccs.gadocontrol.model.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -28,11 +29,13 @@ public class Usuario {
             name = "LOGIN",
             nullable = false
     )
+    @JsonIgnore
     private String logIn;
     @Column(
             name = "SENHA",
             nullable = false
     )
+    @JsonIgnore
     private String senha;
     @Column(
             name = "DATANASC",
