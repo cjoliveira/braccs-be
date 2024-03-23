@@ -92,7 +92,7 @@ public class UsuarioDTO {
     public Usuario converterParaUsuarioComSenha(String login, String senha) {
         Usuario usuario = new Usuario();
         usuario.setNome(this.nome);
-        usuario.setLogIn(login);
+        usuario.setLogin(login);
         usuario.setSenha(senha);
         usuario.setDataNasc(this.dataNasc);
         usuario.setDataCadast(this.dataCadast);

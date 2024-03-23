@@ -67,7 +67,7 @@ public class UsuarioController {
             Usuario entity = optionalEntity.get();
             Usuario usuario = dto.converterParaUsuario();
             usuario.setIdUsuario(entity.getIdUsuario());
-            usuario.setLogIn(entity.getLogIn());
+            usuario.setLogin(entity.getLogin());
             usuario.setSenha(entity.getSenha());
             this.usuarioService.atualizar(usuario);
             return ResponseEntity.ok(usuario);
@@ -80,7 +80,7 @@ public class UsuarioController {
     public ResponseEntity buscar(@RequestParam(value = "nome",required = false) String nome, @RequestParam(value = "login",required = false) String logIn, @RequestParam(value = "data_nasc",required = false) Date dataNasc, @RequestParam(value = "data_cadast",required = false) Date dataCadast, @RequestParam(value = "perfil",required = false) String perfil, @RequestParam(value = "email",required = false) String emailUsuario, @RequestParam(value = "cpf",required = false) String cpf) {
         Usuario usuarioFiltro = new Usuario();
         usuarioFiltro.setNome(nome);
-        usuarioFiltro.setLogIn(logIn);
+        usuarioFiltro.setLogin(logIn);
         usuarioFiltro.setDataNasc(dataNasc);
         usuarioFiltro.setDataCadast(dataCadast);
         usuarioFiltro.setPerfil(perfil);

@@ -1,5 +1,6 @@
 package braccs.gadocontrol.model.entity;
 
+import braccs.gadocontrol.keys.HistFotosKey;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -9,6 +10,7 @@ import java.util.Date;
         name = "HISTFOTOS",
         schema = "gado"
 )
+@IdClass(HistFotosKey.class)
 public class HistFotos {
 
     @Id

@@ -29,8 +29,7 @@ public class Usuario {
             name = "LOGIN",
             nullable = false
     )
-    @JsonIgnore
-    private String logIn;
+    private String login;
     @Column(
             name = "SENHA",
             nullable = false
@@ -79,12 +78,12 @@ public class Usuario {
         this.nome = nome;
     }
 
-    public String getLogIn() {
-        return logIn;
+    public String getLogin() {
+        return login;
     }
 
-    public void setLogIn(String logIn) {
-        this.logIn = logIn;
+    public void setLogin(String login) {
+        this.login = login;
     }
 
     public String getSenha() {
