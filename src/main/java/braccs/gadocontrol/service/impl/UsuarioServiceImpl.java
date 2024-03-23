@@ -51,4 +51,10 @@ public class UsuarioServiceImpl implements UsuarioService {
     public Optional<Usuario> consultarPorId(Long id) {
         return this.repository.findById(id);
     }
+
+    @Override
+    @Transactional
+    public Optional<Usuario> consultarPorLogin(String login) {
+        return this.repository.findByLogin(login);
+    }
 }

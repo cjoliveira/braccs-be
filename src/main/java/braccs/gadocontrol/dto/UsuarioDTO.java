@@ -1,13 +1,13 @@
 package braccs.gadocontrol.dto;
 
+import braccs.gadocontrol.model.entity.Usuario;
+
 import java.util.Date;
 
 public class UsuarioDTO {
 
     private Long idUsuario;
     private String nome;
-    private String logIn;
-    private String senha;
     private Date dataNasc;
     private Date dataCadast;
     private String perfil;
@@ -31,22 +31,6 @@ public class UsuarioDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public String getLogIn() {
-        return logIn;
-    }
-
-    public void setLogIn(String logIn) {
-        this.logIn = logIn;
-    }
-
-    public String getSenha() {
-        return senha;
-    }
-
-    public void setSenha(String senha) {
-        this.senha = senha;
     }
 
     public Date getDataNasc() {
@@ -87,5 +71,38 @@ public class UsuarioDTO {
 
     public void setCpf(String cpf) {
         this.cpf = cpf;
+    }
+
+
+    public Usuario converterParaUsuario() {
+        Usuario usuario = new Usuario();
+        usuario.setNome(this.nome);
+        usuario.setDataNasc(this.dataNasc);
+        usuario.setDataCadast(this.dataCadast);
+        usuario.setPerfil(this.perfil);
+        usuario.setEmailUsuario(this.emailUsuario);
+        usuario.setCpf(this.cpf);
+        if (this.idUsuario != null) {
+            usuario.setIdUsuario(this.idUsuario);
+        }
+
+        return usuario;
+    }
+
+    public Usuario converterParaUsuarioComSenha(String login, String senha) {
+        Usuario usuario = new Usuario();
+        usuario.setNome(this.nome);
+        usuario.setLogIn(login);
+        usuario.setSenha(senha);
+        usuario.setDataNasc(this.dataNasc);
+        usuario.setDataCadast(this.dataCadast);
+        usuario.setPerfil(this.perfil);
+        usuario.setEmailUsuario(this.emailUsuario);
+        usuario.setCpf(this.cpf);
+        if (this.idUsuario != null) {
+            usuario.setIdUsuario(this.idUsuario);
+        }
+
+        return usuario;
     }
 }

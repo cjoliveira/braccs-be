@@ -16,4 +16,6 @@ public interface UsuarioService {
     List<Usuario> buscar(Usuario usuario);
 
     Optional<Usuario> consultarPorId(Long id);
+
+    Optional<Usuario> consultarPorLogin(String login);
 }

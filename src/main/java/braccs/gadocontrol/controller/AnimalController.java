@@ -12,7 +12,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/gado/animais")
+@RequestMapping("/gado/animal")
 @CrossOrigin(origins = "http://127.0.0.1:3000")
 public class AnimalController {
     private final AnimalService service;
