@@ -15,11 +15,11 @@ import java.util.List;
 @RequestMapping("/gado/animal")
 @CrossOrigin(origins = "http://127.0.0.1:3000")
 public class AnimalController {
-    private final AnimalService service;
+    private final AnimalService animalService;
     private final UsuarioService usuarioService;
 
-    public AnimalController(AnimalService service, UsuarioService usuarioService) {
-        this.service = service;
+    public AnimalController(AnimalService animalService, UsuarioService usuarioService) {
+        this.animalService = animalService;
         this.usuarioService = usuarioService;
     }
 
@@ -36,7 +36,7 @@ public class AnimalController {
         animal.setNumCompra(dto.getNumCompra());
 
         if (dto.getIdMae() != null) {
-            animal.setMae(service.consultarPorId(dto.getIdMae()).orElse(null));
+            animal.setMae(animalService.consultarPorId(dto.getIdMae()).orElse(null));
         }
 
         if (dto.getIdUsuarioCadastro() != null) {
@@ -48,7 +48,7 @@ public class AnimalController {
 
     @PostMapping("/salvar-animal")
     public ResponseEntity salvar(@RequestBody AnimalDTO dto) {
-        if (dto.getIdMae() != null && service.consultarPorId(dto.getIdMae()).isEmpty()) {
+        if (dto.getIdMae() != null && animalService.consultarPorId(dto.getIdMae()).isEmpty()) {
             return ResponseEntity.badRequest().body("ID da mãe não foi encontrado na base de dados!");
         } else if (dto.getIdUsuarioCadastro() != null && usuarioService.consultarPorId(dto.getIdUsuarioCadastro()).isEmpty()) {
             return ResponseEntity.badRequest().body("ID do usuário de cadastro não foi encontrado na base de dados!");
@@ -56,7 +56,7 @@ public class AnimalController {
 
         Animal animal = converter(dto);
         try {
-            animal = service.salvar(animal);
+            animal = animalService.salvar(animal);
             return ResponseEntity.ok(animal);
         } catch (RuntimeException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
@@ -65,9 +65,9 @@ public class AnimalController {
 
     @DeleteMapping("/deletar-animal/{idAnimal}")
     public ResponseEntity deletar(@PathVariable("idAnimal") Long idAnimal) {
-        return service.consultarPorId(idAnimal)
+        return animalService.consultarPorId(idAnimal)
                 .map(animal -> {
-                    service.deletar(animal);
+                    animalService.deletar(animal);
                     return ResponseEntity.noContent().build();
                 })
                 .orElse(ResponseEntity.badRequest().body("O id do animal informado não foi encontrado na base de dados, portanto não pode ser excluído."));
@@ -75,9 +75,9 @@ public class AnimalController {
 
     @PutMapping("/atualizar-animal/{idAnimal}")
     public ResponseEntity atualizar(@PathVariable("idAnimal") Long idAnimal, @RequestBody AnimalDTO dto) {
-        return service.consultarPorId(idAnimal)
+        return animalService.consultarPorId(idAnimal)
                 .map(animalExistente -> {
-                    if (dto.getIdMae() != null && service.consultarPorId(dto.getIdMae()).isEmpty()) {
+                    if (dto.getIdMae() != null && animalService.consultarPorId(dto.getIdMae()).isEmpty()) {
                         return ResponseEntity.badRequest().body("ID da mãe não foi encontrado na base de dados!");
                     } else if (dto.getIdUsuarioCadastro() != null && usuarioService.consultarPorId(dto.getIdUsuarioCadastro()).isEmpty()) {
                         return ResponseEntity.badRequest().body("ID do usuário de cadastro não foi encontrado na base de dados!");
@@ -85,7 +85,7 @@ public class AnimalController {
 
                     Animal animalAtualizado = converter(dto);
                     animalAtualizado.setIdAnimal(animalExistente.getIdAnimal());
-                    service.atualizar(animalAtualizado);
+                    animalService.atualizar(animalAtualizado);
                     return ResponseEntity.ok(animalAtualizado);
                 })
                 .orElse(ResponseEntity.badRequest().body("O id do animal informado não foi encontrado na base de dados."));
@@ -128,7 +128,7 @@ public class AnimalController {
             animalFiltro.setMae(mae);
         }
 
-        List<Animal> animais = service.buscar(animalFiltro);
+        List<Animal> animais = animalService.buscar(animalFiltro);
         return ResponseEntity.ok(animais);
     }
 }

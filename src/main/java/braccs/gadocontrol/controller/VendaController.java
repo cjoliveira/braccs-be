@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping({"/gado/venda"})
@@ -73,32 +74,29 @@ public class VendaController {
         }
     }
 
-    @PutMapping({"/atualizar-venda/{IDANIMAL}/{IDUSUARIO}/{IDCLIENTE}"})
-    public ResponseEntity atualizar(@PathVariable("IDANIMAL") long idAnimal, @PathVariable("IDUSUARIO") Long idUsuario, @PathVariable("IDCLIENTE") Long idCliente, @RequestBody VendaDTO dto) {
-        return this.service.consultarPorId(idAnimal, idUsuario, idCliente).map((entity) -> {
-            try {
-                Venda venda = this.converter(dto);
-                venda.setAnimal(entity.getAnimal());
-                venda.setCliente(entity.getCliente());
-                venda.setUsuario(entity.getUsuario());
-                this.service.atualizar(venda);
-                return ResponseEntity.ok(venda);
-            } catch (RuntimeException var4) {
-                return ResponseEntity.badRequest().body(var4.getMessage());
-            }
-        }).orElseGet(() -> {
-            return ResponseEntity.badRequest().body("O id do cliente informado não foi encontrado na base de dados");
-        });
+    @PutMapping({"/atualizar-venda"})
+    public ResponseEntity atualizar(@RequestBody VendaDTO dto) {
+        Optional<Venda> vendaExistente = this.service.consultarPorNumVenda(dto.getNumVenda());
+        if(vendaExistente.isPresent()){
+            Venda entity = vendaExistente.get();
+            Venda venda = this.converter(dto);
+            venda.setAnimal(entity.getAnimal());
+            venda.setCliente(entity.getCliente());
+            venda.setUsuario(entity.getUsuario());
+            this.service.atualizar(venda);
+            return ResponseEntity.ok(venda);
+        } else {
+            return ResponseEntity.badRequest().body("O numero da venda não foi encontrado na base de dados");
+        }
     }
 
-    @DeleteMapping({"/deletar-venda/{IDANIMAL}/{IDUSUARIO}/{IDCLIENTE}"})
-    public ResponseEntity deletar(@PathVariable("IDANIMAL") Long idAnimal, @PathVariable("IDUSUARIO") Long idUsuario, @PathVariable("IDCLIENTE") Long idCliente) {
-        return (ResponseEntity) this.service.consultarPorId(idAnimal, idUsuario, idCliente).map((entity) -> {
+    @DeleteMapping({"/deletar-venda/{numVenda}"})
+    public ResponseEntity deletar(@PathVariable("numVenda") Long numVenda) {
+        return this.service.consultarPorNumVenda(numVenda).map((entity) -> {
             this.service.deletar(entity);
+            this.serviceAnimal.consultarPorId(entity.getAnimal().getIdAnimal()).get().setStatusAtual("NORMAL");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }).orElseGet(() -> {
-            return ResponseEntity.badRequest().body("O id da Venda informado não foi encontrado na base de dados, por isso não pode ser excluído.");
-        });
+        }).orElseGet(() -> ResponseEntity.badRequest().body("O numero da venda informado não foi encontrado na base de dados, por isso não pode ser excluído."));
     }
 
     @GetMapping({"/buscar-vendas"})

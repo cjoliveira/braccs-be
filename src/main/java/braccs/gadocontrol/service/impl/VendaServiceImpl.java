@@ -57,4 +57,10 @@ public class VendaServiceImpl implements VendaService {
         VendaKey id = new VendaKey(idAnimal, idUsuario, idCliente);
         return this.repository.findById(id);
     }
+
+    @Override
+    @Transactional
+    public Optional<Venda> consultarPorNumVenda(Long numVenda) {
+        return this.repository.findByNumVenda(numVenda);
+    }
 }
