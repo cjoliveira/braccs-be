@@ -28,7 +28,6 @@ public class AnimalController {
         animal.setNumId(dto.getNumId());
         animal.setTipo(dto.getTipo());
         animal.setDataNasc(dto.getDataNasc());
-        animal.setDimensao(dto.getDimensao());
         animal.setPeso(dto.getPeso());
         animal.setStatusAtual(dto.getStatusAtual());
         animal.setPreco(dto.getPreco());
@@ -94,12 +93,12 @@ public class AnimalController {
 
     @GetMapping("/buscar-animais")
     public ResponseEntity<List<Animal>> buscarAnimais(
+            @RequestParam(value = "idAnimal", required = false) Long idAnimal,
             @RequestParam(value = "idMae", required = false) Long idMae,
             @RequestParam(value = "idUsuarioCadastro", required = false) Long idUsuarioCadastro,
             @RequestParam(value = "numId", required = false) String numId,
             @RequestParam(value = "tipo", required = false) String tipo,
             @RequestParam(value = "dataNasc", required = false) Date dataNasc,
-            @RequestParam(value = "dimensao", required = false) String dimensao,
             @RequestParam(value = "peso", required = false) Long peso,
             @RequestParam(value = "statusAtual", required = false) String statusAtual,
             @RequestParam(value = "preco", required = false) Long preco,
@@ -108,10 +107,10 @@ public class AnimalController {
             @RequestParam(value = "numCompra", required = false) Long numCompra) {
 
         Animal animalFiltro = new Animal();
+        animalFiltro.setIdAnimal(idAnimal);
         animalFiltro.setNumId(numId);
         animalFiltro.setTipo(tipo);
         animalFiltro.setDataNasc(dataNasc);
-        animalFiltro.setDimensao(dimensao);
         animalFiltro.setPeso(peso);
         animalFiltro.setStatusAtual(statusAtual);
         animalFiltro.setPreco(preco);

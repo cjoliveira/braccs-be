@@ -10,7 +10,6 @@ public class AnimalDTO {
     private String numId;
     private String tipo;
     private Date dataNasc;
-    private String dimensao;
     private Long peso;
     private String statusAtual;
     private Long preco;
@@ -67,14 +66,6 @@ public class AnimalDTO {
 
     public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
-    }
-
-    public String getDimensao() {
-        return dimensao;
-    }
-
-    public void setDimensao(String dimensao) {
-        this.dimensao = dimensao;
     }
 
     public Long getPeso() {

@@ -34,9 +34,6 @@ public class Animal {
     @Column(name = "DATANASC", nullable = false)
     private Date dataNasc;
 
-    @Column(name = "DIM", nullable = false)
-    private String dimensao;
-
     @Column(name = "PESO", nullable = false)
     private Long peso;
 
@@ -52,7 +49,7 @@ public class Animal {
     @Column(name = "GENERO", nullable = false)
     private String genero;
 
-    @Column(name = "NUMCOMPRA", nullable = false)
+    @Column(name = "NUMCOMPRA", nullable = true)
     private Long numCompra;
 
     public Animal() {
@@ -104,14 +101,6 @@ public class Animal {
 
     public void setDataNasc(Date dataNasc) {
         this.dataNasc = dataNasc;
-    }
-
-    public String getDimensao() {
-        return dimensao;
-    }
-
-    public void setDimensao(String dimensao) {
-        this.dimensao = dimensao;
     }
 
     public Long getPeso() {

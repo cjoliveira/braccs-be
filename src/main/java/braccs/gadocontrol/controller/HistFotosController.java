@@ -14,7 +14,7 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping({"/gado/historicoFotos"})
+@RequestMapping({"/gado/historico-fotos"})
 @CrossOrigin(
         origins = {"http://127.0.0.1:3000"}
 )
