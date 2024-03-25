@@ -40,7 +40,7 @@ public class Animal {
     @Column(name = "STATUSATUAL", nullable = false)
     private String statusAtual;
 
-    @Column(name = "PRECO", nullable = false)
+    @Column(name = "PRECO", nullable = true)
     private Long preco;
 
     @Column(name = "DATACADASTRO", nullable = false)

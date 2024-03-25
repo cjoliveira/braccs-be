@@ -20,6 +20,11 @@ public class AnimalServiceImpl implements AnimalService {
     @Override
     @Transactional
     public Animal salvar(Animal animalParam) {
+        if (animalParam.getPreco() != null) {
+            Random random = new Random();
+            Long num = random.nextLong(90000000L) + 10000000L;
+            animalParam.setNumCompra(num);
+        }
         return this.repository.save(animalParam);
     }
 
