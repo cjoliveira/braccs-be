@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
@@ -29,7 +30,7 @@ public class HistFotosController {
 
     private HistFotos converter(HistFotosDTO dto) {
         HistFotos foto = new HistFotos();
-        foto.setFoto(dto.getFoto());
+        foto.setFoto(Base64.getDecoder().decode(dto.getFoto()));
         if (dto.getDataFoto() != null) {
             foto.setDataFoto(dto.getDataFoto());
         }
