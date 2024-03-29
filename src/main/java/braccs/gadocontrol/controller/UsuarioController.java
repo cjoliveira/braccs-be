@@ -82,6 +82,16 @@ public class UsuarioController {
         }
     }
 
+    @GetMapping({"/{idUsuario}"})
+    public ResponseEntity buscaUsuario(@PathVariable("idUsuario") long idUsuario) {
+        Optional<Usuario> usuario = this.usuarioService.consultarPorId(idUsuario);
+        if(usuario.isPresent()){
+            return ResponseEntity.ok(usuario.get());
+        } else {
+            return ResponseEntity.badRequest().body("O id do usuário informado não foi encontrado na base de dados");
+        }
+    }
+
     @GetMapping({"/buscar-usuarios"})
     public ResponseEntity buscar(@RequestParam(value = "nome",required = false) String nome, @RequestParam(value = "login",required = false) String logIn, @RequestParam(value = "data_nasc",required = false) Date dataNasc, @RequestParam(value = "data_cadast",required = false) Date dataCadast, @RequestParam(value = "perfil",required = false) String perfil, @RequestParam(value = "email",required = false) String emailUsuario, @RequestParam(value = "cpf",required = false) String cpf) {
         Usuario usuarioFiltro = new Usuario();
