@@ -86,12 +86,14 @@ public class HistFotosController {
         });
     }
 
-    @GetMapping({"/buscar-fotos"})
-    public ResponseEntity buscar(@RequestParam(value = "FOTO",required = false) byte[] foto) {
-        HistFotos fotoFiltro = new HistFotos();
-        fotoFiltro.setFoto(foto);
-        List<HistFotos> fotos = this.service.buscar(fotoFiltro);
-        return ResponseEntity.ok(fotos);
+    @GetMapping({"/buscar/{idAnimal}"})
+    public ResponseEntity<byte[]> buscar(@PathVariable(value = "idAnimal", required = false) Long idAnimal) {
+        List<HistFotos> fotos = this.service.buscar(idAnimal);
+        if (!fotos.isEmpty() && fotos.get(0).getFoto() != null) {
+            return ResponseEntity.ok().body(fotos.get(0).getFoto());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 

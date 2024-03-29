@@ -14,7 +14,7 @@ public interface HistFotosService {
 
     void deletar(HistFotos histFotosParam);
 
-    List<HistFotos> buscar(HistFotos histFotosParam);
+    List<HistFotos> buscar(Long idAnimal);
 
     Optional<HistFotos> consultarPorId(Long idAnimal, Date dataFoto);
 }

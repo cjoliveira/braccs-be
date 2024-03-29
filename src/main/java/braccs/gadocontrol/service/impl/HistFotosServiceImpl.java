@@ -1,21 +1,23 @@
 package braccs.gadocontrol.service.impl;
 
 import braccs.gadocontrol.keys.HistFotosKey;
+import braccs.gadocontrol.model.entity.Animal;
 import braccs.gadocontrol.model.entity.HistFotos;
 import braccs.gadocontrol.model.repository.HistFotosRepository;
+import braccs.gadocontrol.service.AnimalService;
 import braccs.gadocontrol.service.HistFotosService;
 import jakarta.transaction.Transactional;
-import org.springframework.data.domain.Example;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class HistFotosServiceImpl implements HistFotosService {
     HistFotosRepository repository;
+
+    @Autowired
+    AnimalService animalService;
 
     public HistFotosServiceImpl(HistFotosRepository repository) {
         this.repository = repository;
@@ -41,9 +43,11 @@ public class HistFotosServiceImpl implements HistFotosService {
     }
 
     @Transactional
-    public List<HistFotos> buscar(HistFotos histFotosParam) {
-        Example example = Example.of(histFotosParam);
-        return this.repository.findAll(example);
+    public List<HistFotos> buscar(Long idAnimal) {
+        Animal animal = animalService.consultarPorId(idAnimal).orElse(null);
+        List<HistFotos> histFotos = this.repository.findAllByAnimal(animal);
+        histFotos.sort(Comparator.comparing(HistFotos::getDataFoto).reversed());
+        return histFotos;
     }
 
     @Transactional
