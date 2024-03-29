@@ -5,9 +5,13 @@ import braccs.gadocontrol.model.entity.Animal;
 import braccs.gadocontrol.model.entity.Usuario;
 import braccs.gadocontrol.service.AnimalService;
 import braccs.gadocontrol.service.UsuarioService;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 
@@ -132,5 +136,30 @@ public class AnimalController {
 
         List<Animal> animais = animalService.buscar(animalFiltro);
         return ResponseEntity.ok(animais);
+    }
+
+    @GetMapping("/dados-rebanho")
+    public ResponseEntity<List<Animal>> fetchDadosRebanho(
+            @RequestParam(value="data_inicio", required = true) String dataInicio,
+            @RequestParam(value = "data_fim", required = true) String dataFim) {
+
+        List<Animal> animais = animalService.buscarAnimaisDisponiveisPorData(dataInicio, dataFim);
+        return ResponseEntity.ok(animais);
+    }
+
+    @GetMapping("/dados-rebanho-csv")
+    public ResponseEntity<String> fetchDadosRebanhoCsv(
+            @RequestParam(value="data_inicio", required = true) String dataInicio,
+            @RequestParam(value = "data_fim", required = true) String dataFim) {
+
+        String csvData = animalService.getAnimaisAsCsv(dataInicio, dataFim);
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMdd");
+        String currentDate = LocalDate.now().format(dtf);
+        String filename = "dados_rebanho_" + currentDate + ".csv";
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=" + filename);
+        headers.add(HttpHeaders.CONTENT_TYPE, "text/csv; charset=utf-8");
+
+        return new ResponseEntity<>(csvData, headers, HttpStatus.OK);
     }
 }

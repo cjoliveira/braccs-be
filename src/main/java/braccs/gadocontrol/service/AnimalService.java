@@ -16,4 +16,8 @@ public interface AnimalService {
     List<Animal> buscar(Animal animal);
 
     Optional<Animal> consultarPorId(long id);
+
+    List<Animal> buscarAnimaisDisponiveisPorData(String startDate, String endDate);
+
+    String getAnimaisAsCsv(String dataInicio, String dataFim);
 }
