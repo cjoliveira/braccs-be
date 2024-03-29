@@ -3,8 +3,11 @@ package braccs.gadocontrol.controller;
 import braccs.gadocontrol.dto.UsuarioDTO;
 import braccs.gadocontrol.model.entity.Usuario;
 import braccs.gadocontrol.service.UsuarioService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -18,6 +21,9 @@ import java.util.Optional;
 )
 public class UsuarioController {
     UsuarioService usuarioService;
+
+    @Autowired
+    private JavaMailSender mailSender;
 
     public UsuarioController(UsuarioService usuarioService) {
         this.usuarioService = usuarioService;
@@ -88,5 +94,31 @@ public class UsuarioController {
         usuarioFiltro.setCpf(cpf);
         List<Usuario> usuarios = this.usuarioService.buscar(usuarioFiltro);
         return ResponseEntity.ok(usuarios);
+    }
+
+    @GetMapping("/recuperar-senha")
+    public ResponseEntity recuperarSenha(@RequestParam("login") String login, @RequestParam("email") String email) {
+        return usuarioService.consultarPorLogin(login).map(entity ->{
+
+            SimpleMailMessage message = new SimpleMailMessage();
+            if(entity.getEmailUsuario().equals(email)) {
+
+                message.setText("Senha do Sistema gado: " + entity.getSenha());
+                message.setTo(entity.getEmailUsuario());
+                message.setSubject("Recuperação de senha Sistema Gado");
+                message.setFrom("gadogrupo@gmail.com");
+
+                try {
+                    mailSender.send(message);
+                    return new ResponseEntity(HttpStatus.NO_CONTENT);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return ResponseEntity.badRequest().body("Erro ao enviar email!");
+                }
+            }
+
+            return ResponseEntity.badRequest().body("O e-mail informado não corresponde ao e-mail cadastrado para o usuário informado.");
+
+        }).orElseGet(() -> ResponseEntity.badRequest().body("O id do usuário informado não foi encontrado na base de dados, por isso não foi possivel enviar e-mail de recuperação de senha.") );
     }
 }
