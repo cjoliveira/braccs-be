@@ -10,11 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping({"/gado/historicoFotos"})
+@RequestMapping({"/gado/historico-fotos"})
 @CrossOrigin(
         origins = {"http://127.0.0.1:3000"}
 )
@@ -29,7 +30,7 @@ public class HistFotosController {
 
     private HistFotos converter(HistFotosDTO dto) {
         HistFotos foto = new HistFotos();
-        foto.setFoto(dto.getFoto());
+        foto.setFoto(Base64.getDecoder().decode(dto.getFoto()));
         if (dto.getDataFoto() != null) {
             foto.setDataFoto(dto.getDataFoto());
         }
@@ -85,12 +86,14 @@ public class HistFotosController {
         });
     }
 
-    @GetMapping({"/buscar-fotos"})
-    public ResponseEntity buscar(@RequestParam(value = "FOTO",required = false) byte[] foto) {
-        HistFotos fotoFiltro = new HistFotos();
-        fotoFiltro.setFoto(foto);
-        List<HistFotos> fotos = this.service.buscar(fotoFiltro);
-        return ResponseEntity.ok(fotos);
+    @GetMapping({"/buscar/{idAnimal}"})
+    public ResponseEntity<byte[]> buscar(@PathVariable(value = "idAnimal", required = false) Long idAnimal) {
+        List<HistFotos> fotos = this.service.buscar(idAnimal);
+        if (!fotos.isEmpty() && fotos.get(0).getFoto() != null) {
+            return ResponseEntity.ok().body(fotos.get(0).getFoto());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 }
 

@@ -2,6 +2,8 @@ package braccs.gadocontrol.controller;
 
 import braccs.gadocontrol.dto.VendaDTO;
 import braccs.gadocontrol.model.entity.Venda;
+import braccs.gadocontrol.model.strategy.PrecoAltaQtdStrategy;
+import braccs.gadocontrol.model.strategy.PrecoRegularStrategy;
 import braccs.gadocontrol.service.AnimalService;
 import braccs.gadocontrol.service.ClienteService;
 import braccs.gadocontrol.service.UsuarioService;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping({"/gado/venda"})
@@ -73,32 +76,29 @@ public class VendaController {
         }
     }
 
-    @PutMapping({"/atualizar-venda/{IDANIMAL}/{IDUSUARIO}/{IDCLIENTE}"})
-    public ResponseEntity atualizar(@PathVariable("IDANIMAL") long idAnimal, @PathVariable("IDUSUARIO") Long idUsuario, @PathVariable("IDCLIENTE") Long idCliente, @RequestBody VendaDTO dto) {
-        return this.service.consultarPorId(idAnimal, idUsuario, idCliente).map((entity) -> {
-            try {
-                Venda venda = this.converter(dto);
-                venda.setAnimal(entity.getAnimal());
-                venda.setCliente(entity.getCliente());
-                venda.setUsuario(entity.getUsuario());
-                this.service.atualizar(venda);
-                return ResponseEntity.ok(venda);
-            } catch (RuntimeException var4) {
-                return ResponseEntity.badRequest().body(var4.getMessage());
-            }
-        }).orElseGet(() -> {
-            return ResponseEntity.badRequest().body("O id do cliente informado não foi encontrado na base de dados");
-        });
+    @PutMapping({"/atualizar-venda"})
+    public ResponseEntity atualizar(@RequestBody VendaDTO dto) {
+        Optional<Venda> vendaExistente = this.service.consultarPorNumVenda(dto.getNumVenda());
+        if(vendaExistente.isPresent()){
+            Venda entity = vendaExistente.get();
+            Venda venda = this.converter(dto);
+            venda.setAnimal(entity.getAnimal());
+            venda.setCliente(entity.getCliente());
+            venda.setUsuario(entity.getUsuario());
+            this.service.atualizar(venda);
+            return ResponseEntity.ok(venda);
+        } else {
+            return ResponseEntity.badRequest().body("O numero da venda não foi encontrado na base de dados");
+        }
     }
 
-    @DeleteMapping({"/deletar-venda/{IDANIMAL}/{IDUSUARIO}/{IDCLIENTE}"})
-    public ResponseEntity deletar(@PathVariable("IDANIMAL") Long idAnimal, @PathVariable("IDUSUARIO") Long idUsuario, @PathVariable("IDCLIENTE") Long idCliente) {
-        return (ResponseEntity) this.service.consultarPorId(idAnimal, idUsuario, idCliente).map((entity) -> {
+    @DeleteMapping({"/deletar-venda/{numVenda}"})
+    public ResponseEntity deletar(@PathVariable("numVenda") Long numVenda) {
+        return this.service.consultarPorNumVenda(numVenda).map((entity) -> {
             this.service.deletar(entity);
+            this.serviceAnimal.consultarPorId(entity.getAnimal().getIdAnimal()).get().setStatusAtual("NORMAL");
             return new ResponseEntity(HttpStatus.NO_CONTENT);
-        }).orElseGet(() -> {
-            return ResponseEntity.badRequest().body("O id da Venda informado não foi encontrado na base de dados, por isso não pode ser excluído.");
-        });
+        }).orElseGet(() -> ResponseEntity.badRequest().body("O numero da venda informado não foi encontrado na base de dados, por isso não pode ser excluído."));
     }
 
     @GetMapping({"/buscar-vendas"})
@@ -109,5 +109,26 @@ public class VendaController {
         vendaFiltro.setNumVenda(numVenda);
         List<Venda> venda = this.service.buscar(vendaFiltro);
         return ResponseEntity.ok(venda);
+    }
+
+    @GetMapping({"/simular"})
+    public ResponseEntity simularPreco(@RequestBody VendaDTO dto) {
+        if (this.service.consultarPorId(dto.getIdAnimal(), dto.getIdUsuario(), dto.getIdCliente()).isPresent()) {
+            return ResponseEntity.badRequest().body("ID da venda já existe na BD");
+        } else if (this.serviceAnimal.consultarPorId(dto.getIdAnimal()).isEmpty()) {
+            return ResponseEntity.badRequest().body("ID do animal não existe na BD");
+        } else if (this.serviceCliente.consultarPorId(dto.getIdCliente()).isEmpty()) {
+            return ResponseEntity.badRequest().body("ID do cliente não existe na BD");
+        } else if (this.serviceUsuario.consultarPorId(dto.getIdUsuario()).isEmpty()) {
+            return ResponseEntity.badRequest().body("ID do usuario não existe na BD");
+        } else {
+            Venda venda = this.converter(dto);
+            if(venda.getCliente().getCpfCnpj().length()<=11){
+                venda.definirPreco(new PrecoRegularStrategy());
+            } else {
+                venda.definirPreco(new PrecoAltaQtdStrategy());
+            }
+            return ResponseEntity.ok(venda);
+        }
     }
 }

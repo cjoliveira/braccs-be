@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class UsuarioDTO {
 
-    private Long idUsuario;
     private String nome;
     private Date dataNasc;
     private Date dataCadast;
@@ -15,14 +14,6 @@ public class UsuarioDTO {
     private String cpf;
 
     public UsuarioDTO() {
-    }
-
-    public Long getIdUsuario() {
-        return idUsuario;
-    }
-
-    public void setIdUsuario(Long idUsuario) {
-        this.idUsuario = idUsuario;
     }
 
     public String getNome() {
@@ -82,9 +73,6 @@ public class UsuarioDTO {
         usuario.setPerfil(this.perfil);
         usuario.setEmailUsuario(this.emailUsuario);
         usuario.setCpf(this.cpf);
-        if (this.idUsuario != null) {
-            usuario.setIdUsuario(this.idUsuario);
-        }
 
         return usuario;
     }
@@ -92,16 +80,13 @@ public class UsuarioDTO {
     public Usuario converterParaUsuarioComSenha(String login, String senha) {
         Usuario usuario = new Usuario();
         usuario.setNome(this.nome);
-        usuario.setLogIn(login);
+        usuario.setLogin(login);
         usuario.setSenha(senha);
         usuario.setDataNasc(this.dataNasc);
         usuario.setDataCadast(this.dataCadast);
         usuario.setPerfil(this.perfil);
         usuario.setEmailUsuario(this.emailUsuario);
         usuario.setCpf(this.cpf);
-        if (this.idUsuario != null) {
-            usuario.setIdUsuario(this.idUsuario);
-        }
 
         return usuario;
     }

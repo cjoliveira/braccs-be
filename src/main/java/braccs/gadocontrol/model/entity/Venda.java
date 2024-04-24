@@ -1,9 +1,12 @@
 package braccs.gadocontrol.model.entity;
 
 import braccs.gadocontrol.keys.VendaKey;
+import braccs.gadocontrol.model.strategy.PrecoRegularStrategy;
+import braccs.gadocontrol.model.strategy.PrecoStrategy;
 import jakarta.persistence.*;
 
 import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Table(
@@ -90,5 +93,9 @@ public class Venda {
 
     public void setNumVenda(Long numVenda) {
         this.numVenda = numVenda;
+    }
+
+    public void definirPreco(PrecoStrategy precoStrategy) {
+        this.preco = precoStrategy.calcularPreco(this.preco);
     }
 }

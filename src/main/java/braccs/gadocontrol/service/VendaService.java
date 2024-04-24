@@ -16,4 +16,6 @@ public interface VendaService {
     List<Venda> buscar(Venda venda);
 
     Optional<Venda> consultarPorId(Long idAnimal, Long idUsuario, Long idCliente);
+
+    Optional<Venda> consultarPorNumVenda(Long numVenda);
 }
